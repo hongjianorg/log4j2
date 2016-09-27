@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 要使用这种复杂xml 配置方式 strict 配置很关键，不然会报错，这就是官网所说的strict xml -->
+<!-- 官网有简单的xml 配置方式，不过要使用文件输出也需要配置插件，详情见官网xml 配置 -->
+<!-- log4j2 支持配置文件的相互包含 -->
+<Configuration status="WARN" strict="true">
+  <!-- 配置文件中可以使用的变量 -->
+  <Properties>
+    <Property name="filename">E://logs/log4j2/log.log</Property>
+    <Property name="errorFileName">E://logs/log4j2/errorLog.log</Property>
+    <Property name="commonPattern">%d{HH:mm:ss.SSS} [%t] [%-5level] %logger{36} - %msg%n</Property>
+    <!-- class and line number -->
+    <Property name="classLineNumber">%C{1}.%M %m %ex%n</Property>
+  </Properties>
+  <Appenders>
+	<!-- console appender -->
+    <Appender type="Console" name="STDOUT">
+      <Layout type="PatternLayout" pattern="${commonPattern}"/>
+    </Appender>
+    <!-- file appender -->
+    <Appender type="File" name="File" fileName="${errorFileName}">
+      <Layout type="PatternLayout">
+        <Pattern>%d{HH:mm:ss.SSS} [%t] [%-5level] %logger{36} - %msg%n</Pattern>
+      </Layout>
+    </Appender>
+    <!-- 非strict 的配置项才能生效 -->
+    <!-- http://logging.apache.org/log4j/2.x/manual/appenders.html#RollingFileAppender -->
+    <!-- 按大小 -->
+      <!--<RollingFile name="error_appender" fileName="${LOG_HOME}/error.log" 
+      			 filePattern="${LOG_HOME}/error-%d{yyyy-MM-dd-HH-mm}-%i.log.gz">  
+	    <PatternLayout pattern="%-d{yyyy-MM-dd HH:mm:ss} [%thread] %m%n"/>  
+	    <SizeBasedTriggeringPolicy size="100 MB" />  
+	  </RollingFile>--> 
+	  <!-- 按时间 -->
+	  <!--<RollingFile name="error_appender" fileName="${errorFileName}" 
+	  			 filePattern="${LOG_HOME}/error-%d{yyyy-MM-dd}.log">  
+	    <PatternLayout pattern="%-d{yyyy-MM-dd HH:mm:ss} [%thread] %m%n"/>  
+	    <Policies>  
+	        <TimeBasedTriggeringPolicy modulate="true" interval="1"/>  
+	    </Policies>  
+	  </RollingFile>-->
+  </Appenders>
+  <Loggers>
+  	<Logger name="com.hongjian" level="error" additivity="false">
+      <AppenderRef ref="File"/>
+    </Logger>
+    <Root level="error">
+      <AppenderRef ref="STDOUT"/>
+    </Root>
+  </Loggers>
+</Configuration>
